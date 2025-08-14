@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ticket de Compra</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background: #f8f8f8; }
+  .ticket { background: #fff; padding: 15px; border-radius: 8px; width: 300px; margin: auto; }
+  .logo { text-align: center; margin-bottom: 10px; }
+  .logo img { max-width: 80px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { font-size: 14px; padding: 4px; text-align: left; }
+  .total { font-weight: bold; font-size: 16px; }
+  .qr { text-align: center; margin-top: 15px; }
+</style>
+</head>
+<body>
+
+<div class="ticket">
+  <div class="logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitmap_Logo.png" alt="Logo">
+  </div>
+  <h2 style="text-align:center;">Ticket</h2>
+  
+  <p><strong>Boleta:</strong> <span id="boleta"></span></p>
+  <p><strong>Cliente/Mesa:</strong> <span id="mesa"></span></p>
+  <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+  <p><strong>Estado:</strong> <span id="estado"></span></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Cant.</th>
+        <th>Producto</th>
+        <th>Precio</th>
+      </tr>
+    </thead>
+    <tbody id="detalle"></tbody>
+  </table>
+
+  <p class="total">Total: $<span id="total"></span></p>
+  
+  <div class="qr">
+    <img id="qrcode" alt="QR">
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  
+  document.getElementById('boleta').textContent = params.get('boleta') || '';
+  document.getElementById('mesa').textContent = params.get('mesa') || '';
+  document.getElementById('fecha').textContent = params.get('fecha') || '';
+  document.getElementById('estado').textContent = params.get('estado') || '';
+  document.getElementById('total').textContent = params.get('total') || '';
+
+  // Productos
+  const cantidades = (params.get('cantidades') || '').split(',');
+  const productos = (params.get('servicios') || '').split(',');
+  const precios = (params.get('p_unit') || '').split(',');
+  
+  const detalle = document.getElementById('detalle');
+  for (let i = 0; i < cantidades.length; i++) {
+    if (cantidades[i]) {
+      detalle.innerHTML += `<tr>
+        <td>${cantidades[i]}</td>
+        <td>${productos[i] || ''}</td>
+        <td>$${precios[i] || ''}</td>
+      </tr>`;
+    }
+  }
+
+  // QR con Google Chart API
+  const qrData = `Pago boleta ${params.get('boleta')}`;
+  document.getElementById('qrcode').src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrData)}`;
+</script>
+
+</body>
+</html>
