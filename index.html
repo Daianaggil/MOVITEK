@@ -1,53 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="style.css">
-        <title>MOVITEK</title>
-    </head>
-    <body>
-        <div class="ticket">
-            <img src="./logo.png" alt="Logo">
-            <p class="centered">
-                <br>Avenida Rioja 145 Norte
-                <br>264 6738648</p>
-            <table>
-                <thead>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVITEK - Ticket</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 10px; background: #f8f8f8; }
+        .ticket { background: #fff; padding: 15px; border-radius: 8px; width: 300px; margin: auto; }
+        h2 { text-align: center; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { font-size: 14px; padding: 4px; text-align: left; }
+        .total { font-weight: bold; font-size: 16px; }
+        .centered { text-align: center; }
+        .hidden-print { display: block; margin: 10px auto; }
+        @media print {
+            .hidden-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket">
+        <h2>MOVITEK</h2>
+        <p><strong>Boleta:</strong> <span id="pedido"></span></p>
+        <p><strong>Mesa:</strong> <span id="mesa"></span></p>
+        <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+        <p><strong>Estado:</strong> <span id="estado"></span></p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Q.</th>
+                    <th>Descripción</th>
+                    <th>$$</th>
+                </tr>
+            </thead>
+            <tbody id="detalle"></tbody>
+        </table>
+
+        <p class="total">Total: $<span id="total"></span></p>
+        <p><strong>Descuento:</strong> $<span id="descuento"></span></p>
+        <p><strong>Subtotal Desc:</strong> $<span id="subtotal_desc"></span></p>
+        <p><strong>Fecha entrega:</strong> <span id="fecha_entrega"></span></p>
+        <p><strong>Domicilio:</strong> $<span id="domi"></span></p>
+        <p><strong>Dirección:</strong> <span id="direccion"></span></p>
+        <p><strong>Propina:</strong> $<span id="propina"></span></p>
+    </div>
+
+    <button class="hidden-print" onclick="window.print()">Imprimir</button>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        document.getElementById("pedido").textContent = params.get("pedido") || "";
+        document.getElementById("mesa").textContent = params.get("mesa") || "";
+        document.getElementById("fecha").textContent = params.get("fecha") || "";
+        document.getElementById("estado").textContent = params.get("estado") || "";
+        document.getElementById("total").textContent = params.get("total") || "";
+        document.getElementById("descuento").textContent = params.get("descuento") || "";
+        document.getElementById("subtotal_desc").textContent = params.get("subtotal_desc") || "";
+        document.getElementById("fecha_entrega").textContent = params.get("fecha_entrega") || "";
+        document.getElementById("domi").textContent = params.get("domi") || "";
+        document.getElementById("direccion").textContent = params.get("direccion") || "";
+        document.getElementById("propina").textContent = params.get("propina") || "";
+
+        // Llenar detalle de productos
+        const cantidades = (params.get("cantidades") || "").split(",");
+        const servicios = (params.get("servicios") || "").split(",");
+        const precios = (params.get("p_unit") || "").split(",");
+
+        const detalle = document.getElementById("detalle");
+        for (let i = 0; i < cantidades.length; i++) {
+            if (cantidades[i]) {
+                detalle.innerHTML += `
                     <tr>
-                        <th class="quantity">Q.</th>
-                        <th class="description">Description</th>
-                        <th class="price">$$</th>
+                        <td>${cantidades[i]}</td>
+                        <td>${servicios[i] || ""}</td>
+                        <td>$${precios[i] || ""}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="quantity">1.00</td>
-                        <td class="description">ARDUINO UNO R3</td>
-                        <td class="price">$25.00</td>
-                    </tr>
-                    <tr>
-                        <td class="quantity">2.00</td>
-                        <td class="description">JAVASCRIPT BOOK</td>
-                        <td class="price">$10.00</td>
-                    </tr>
-                    <tr>
-                        <td class="quantity">1.00</td>
-                        <td class="description">STICKER PACK</td>
-                        <td class="price">$10.00</td>
-                    </tr>
-                    <tr>
-                        <td class="quantity"></td>
-                        <td class="description">TOTAL</td>
-                        <td class="price">$55.00</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="centered">Gracias por su compra!
-                <br>parzibyte.me/blog</p>
-        </div>
-        <button id="btnPrint" class="hidden-print">Print</button>
-        <script src="script.js"></script>
-    </body>
+                `;
+            }
+        }
+    </script>
+</body>
 </html>
