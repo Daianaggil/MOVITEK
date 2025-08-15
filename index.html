@@ -4,28 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOVITEK - Ticket</title>
-    <link rel="stylesheet" href="style.css">
     <style>
         body { font-family: Arial, sans-serif; padding: 10px; background: #f8f8f8; }
         .ticket { background: #fff; padding: 15px; border-radius: 8px; width: 300px; margin: auto; }
-        h2 { text-align: center; margin-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { font-size: 14px; padding: 4px; text-align: left; }
-        .total { font-weight: bold; font-size: 16px; }
         .centered { text-align: center; }
-        .hidden-print { display: block; margin: 10px auto; }
-        @media print {
-            .hidden-print { display: none; }
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { font-size: 14px; padding: 4px; text-align: left; }
+        .total { font-weight: bold; font-size: 16px; text-align: right; margin-top: 10px; }
+        @media print { .hidden-print { display: none; } }
     </style>
 </head>
 <body>
     <div class="ticket">
-        <h2>MOVITEK</h2>
-        <p><strong>Boleta:</strong> <span id="pedido"></span></p>
-        <p><strong>Mesa:</strong> <span id="mesa"></span></p>
-        <p><strong>Fecha:</strong> <span id="fecha"></span></p>
-        <p><strong>Estado:</strong> <span id="estado"></span></p>
+        <div class="centered">
+            <img src="logo.png" alt="Logo" style="max-width:120px;"><br>
+            <strong>MOVITEK</strong><br>
+            Avenida Rioja 145 Norte<br>
+            Tel: 264 6738648
+        </div>
 
         <table>
             <thead>
@@ -39,30 +35,12 @@
         </table>
 
         <p class="total">Total: $<span id="total"></span></p>
-        <p><strong>Descuento:</strong> $<span id="descuento"></span></p>
-        <p><strong>Subtotal Desc:</strong> $<span id="subtotal_desc"></span></p>
-        <p><strong>Fecha entrega:</strong> <span id="fecha_entrega"></span></p>
-        <p><strong>Domicilio:</strong> $<span id="domi"></span></p>
-        <p><strong>Dirección:</strong> <span id="direccion"></span></p>
-        <p><strong>Propina:</strong> $<span id="propina"></span></p>
     </div>
 
     <button class="hidden-print" onclick="window.print()">Imprimir</button>
 
     <script>
         const params = new URLSearchParams(window.location.search);
-
-        document.getElementById("pedido").textContent = params.get("pedido") || "";
-        document.getElementById("mesa").textContent = params.get("mesa") || "";
-        document.getElementById("fecha").textContent = params.get("fecha") || "";
-        document.getElementById("estado").textContent = params.get("estado") || "";
-        document.getElementById("total").textContent = params.get("total") || "";
-        document.getElementById("descuento").textContent = params.get("descuento") || "";
-        document.getElementById("subtotal_desc").textContent = params.get("subtotal_desc") || "";
-        document.getElementById("fecha_entrega").textContent = params.get("fecha_entrega") || "";
-        document.getElementById("domi").textContent = params.get("domi") || "";
-        document.getElementById("direccion").textContent = params.get("direccion") || "";
-        document.getElementById("propina").textContent = params.get("propina") || "";
 
         // Llenar detalle de productos
         const cantidades = (params.get("cantidades") || "").split(",");
@@ -81,6 +59,9 @@
                 `;
             }
         }
+
+        // Total
+        document.getElementById("total").textContent = params.get("total") || "0.00";
     </script>
 </body>
 </html>
